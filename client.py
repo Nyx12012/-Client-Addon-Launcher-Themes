@@ -126,9 +126,18 @@ def _colour_map():
                 cmap.setdefault(old, target)
     return cmap
 
+def _option_names(widget):
+    try:
+        return set(widget.keys())
+    except Exception:
+        return set()
+
 
 def _restyle_opts(widget, cmap):
+    names = _option_names(widget)
     for opt in COLOUR_OPTS:
+        if opt not in names:
+            continue
         try:
             value = str(widget.cget(opt)).lower()
         except Exception:
@@ -484,7 +493,7 @@ TK_BUTTON_TEXT = "🧩 TavernKeeper"
 
 def _find_by_text(widget, text):
     try:
-        if str(widget.cget("text")) == text:
+        if "text" in _option_names(widget) and str(widget.cget("text")) == text:
             return widget
     except Exception:
         pass
